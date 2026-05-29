@@ -1,0 +1,16 @@
+[
+  {
+    "id": "9274030d-8dac-4fee-8985-2b2c28732032",
+    "student_id": "5938f093-c0de-46d1-8ccc-99771f95e509",
+    "month": "4",
+    "year": 2026,
+    "total_amount": "50000",
+    "paid_amount": "3000",
+    "status": "partial",
+    "due_date": null,
+    "created_at": "2026-04-30T06:51:39.009Z",
+    "register_no": null,
+    "admission_year": null,
+    "balance": "47000.00"
+  }
+]

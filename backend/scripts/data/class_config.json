@@ -1,0 +1,47 @@
+[
+  {
+    "id": "26c24db8-c259-471f-b14a-18062ff626fc",
+    "class_name": "9A",
+    "max_students": 40,
+    "current_students": 1,
+    "created_at": "2026-04-21T12:14:57.088Z",
+    "updated_at": "2026-05-01T03:30:23.333Z",
+    "subjects": "telugu,hindi,english,maths,physics,biology,social"
+  },
+  {
+    "id": "5467bead-1abe-4e6c-805a-064ddcd26727",
+    "class_name": "6A",
+    "max_students": 40,
+    "current_students": 2,
+    "created_at": "2026-04-21T12:20:15.301Z",
+    "updated_at": "2026-05-01T03:30:23.333Z",
+    "subjects": "telugu,hindi,english,maths,science,social"
+  },
+  {
+    "id": "7b8bd5a5-6c1b-48f5-a72b-2bd2a09e0c18",
+    "class_name": "7A",
+    "max_students": 40,
+    "current_students": 1,
+    "created_at": "2026-04-21T12:19:26.959Z",
+    "updated_at": "2026-05-01T03:30:23.333Z",
+    "subjects": "telugu, hindi, english, maths, social, science"
+  },
+  {
+    "id": "9677d566-5495-4e79-bb8b-a8654672e373",
+    "class_name": "10A",
+    "max_students": 40,
+    "current_students": 2,
+    "created_at": "2026-04-13T17:38:24.480Z",
+    "updated_at": "2026-05-01T03:30:23.333Z",
+    "subjects": "social, hindi, english, maths, physics, biology, telugu"
+  },
+  {
+    "id": "ffad575b-ade5-4de2-bc4c-fda5b92fede1",
+    "class_name": "8A",
+    "max_students": 40,
+    "current_students": 1,
+    "created_at": "2026-04-21T12:18:44.090Z",
+    "updated_at": "2026-05-01T03:30:23.333Z",
+    "subjects": "telugu,hindi,english,maths,physics,biology,social"
+  }
+]
