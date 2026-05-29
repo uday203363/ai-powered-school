@@ -22,3 +22,37 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Lockfiles
+package-lock.json
+yarn.lock
+
+# Vite / caches
+.vite/
+.cache/
+
+# Environment files
+.env
+.env.*.local
+.env.local
+
+# Uploads and local data
+uploads/
+backend/uploads/
+frontend/uploads/
+data/
+*.sqlite
+*.db
+
+# Coverage
+coverage/
+
+# Public build
+public/build/
+
+# Temp
+.tmp/
+
+# Misc archives
+*.gz
+*.zip
