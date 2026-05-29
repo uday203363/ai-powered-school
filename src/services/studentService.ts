@@ -8,7 +8,6 @@ import { normalizeObject } from '../utils/normalize';
 import { apiRequest } from './apiClient';
 import { 
   generateNextRegisterNumber, 
-  parseRegisterNumber,
   isValidRegisterNumber,
   registerConfig 
 } from './registerNumber';
@@ -22,10 +21,12 @@ export interface StudentInput {
   email: string;
   password: string;
   phone?: string;
+  father_name?: string;
   class: string;
   status?: 'Active' | 'Inactive' | 'Transferred' | 'Dropped' | 'Left' | 'Graduated';
   date_of_birth?: string;
   gender?: string;
+  accommodation_type?: string;
   parent_email?: string;
   parent_phone?: string;
   address?: string;
@@ -49,6 +50,7 @@ export interface StudentUpdate {
   password?: string;
   phone?: string;
   father_name?: string;
+  accommodation_type?: string;
   class?: string;
   status?: 'Active' | 'Inactive' | 'Transferred' | 'Dropped' | 'Left' | 'Graduated';
   date_of_birth?: string;
@@ -65,6 +67,7 @@ export interface StudentFilters {
   admission_year?: number;
   status?: 'Active' | 'Inactive' | 'Transferred' | 'Dropped' | 'Left' | 'Graduated';
   search?: string; // Search by name or register_no
+  limit?: number;
 }
 
 const STUDENT_STATUSES = ['Active', 'Inactive', 'Transferred', 'Dropped', 'Left', 'Graduated'] as const;
@@ -136,7 +139,6 @@ export async function createStudent(input: StudentInput): Promise<OperationResul
     // Normalize class and names to UPPERCASE (except email)
     const normalizedClass = input.class.toUpperCase();
     const normalizedName = input.name.toUpperCase();
-    const normalizedFatherName = input.father_name?.toUpperCase() || null;
     const normalizedStatus = normalizeStudentStatus(input.status || 'Active');
 
     console.log(`📝 Creating student: ${normalizedName} (${input.email}) in class ${normalizedClass}`);

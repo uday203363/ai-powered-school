@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Input, Modal } from '../../components/common';
 import { studentHistoryService } from '../../services';
-import { Search, Download, TrendingUp, Calendar, DollarSign, BookOpen, Trophy, TrendingDown } from 'lucide-react';
+import { Search, Download, TrendingUp, Calendar, DollarSign, BookOpen } from 'lucide-react';
 
 export const StudentHistoryPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');

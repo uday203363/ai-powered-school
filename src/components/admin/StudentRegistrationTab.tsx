@@ -10,26 +10,24 @@ import {
   getAllStudents, 
   updateStudent, 
   updateStudentStatus,
-  reactivateStudent 
 } from '../../services/studentService';
 import { classConfigService } from '../../services/database';
-import { generateNextRegisterNumber } from '../../services/registerNumber';
-import { supabase } from '../../services/supabase';
+// registerNumber and supabase not required in this component
 import { apiRequest } from '../../services/apiClient';
-import { Search, Plus, Trash2, Edit2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Search, Plus, Edit2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 interface Student {
-  id: string;
+  id?: string;
   register_no: string;
   name: string;
   email: string;
   class: string;
-  admission_year: number;
+  admission_year?: number;
   status: 'Active' | 'Inactive' | 'Transferred' | 'Dropped' | 'Left' | 'Graduated';
   phone?: string;
   father_name?: string;
-  gender?: 'Male' | 'Female' | '';
-  accommodation_type?: 'Hostel' | 'Day Scholar' | '';
+  gender?: string;
+  accommodation_type?: string;
   initial_fee?: number;
   current_fee?: number;
 }
@@ -106,8 +104,8 @@ export const StudentRegistrationTab: React.FC = () => {
           setFormData(prev => ({ ...prev, class: result.data[0].class_name }));
         }
       } else {
-        console.error('❌ Failed to load classes:', result.error);
-        setErrorMessage(`Failed to load classes: ${result.error || 'Unknown error'}`);
+        console.error('❌ Failed to load classes');
+        setErrorMessage('Failed to load classes');
       }
     } catch (error) {
       console.error('❌ Error loading classes:', error);
@@ -160,7 +158,6 @@ export const StudentRegistrationTab: React.FC = () => {
     setSuccessMessage('');
 
     try {
-      const year = new Date().getFullYear();
       console.log('🔄 Creating student...', { name: formData.name, email: formData.email });
       
       const result = await createStudent({
@@ -171,8 +168,8 @@ export const StudentRegistrationTab: React.FC = () => {
         status: formData.status,
         phone: formData.phone,
         father_name: formData.father_name.toUpperCase(), // ✅ UPPERCASE
-        gender: formData.gender || null,
-        accommodation_type: formData.accommodation_type?.toUpperCase() || null, // ✅ UPPERCASE
+        gender: formData.gender || undefined,
+        accommodation_type: formData.accommodation_type?.toUpperCase() || undefined, // ✅ UPPERCASE
         initial_fee: formData.initial_fee || 0,
       });
 
@@ -209,7 +206,7 @@ export const StudentRegistrationTab: React.FC = () => {
         }
         
         setSuccessMessage(`✅ Student created successfully with Register No: ${result.data?.register_no || '(generating...)'}`);
-        setFormData({ name: '', email: '', class: '1A', status: 'Active', password: '', phone: '', father_name: '', gender: '', accommodation_type: '', initial_fee: 0 });
+        setFormData({ name: '', email: '', class: availableClasses?.[0]?.class_name || '', status: 'Active', password: '', phone: '', father_name: '', gender: '', accommodation_type: '', initial_fee: 0 });
         setShowForm(false);
         loadStudents();
         loadAvailableClasses(); // Refresh class strength
@@ -253,8 +250,8 @@ export const StudentRegistrationTab: React.FC = () => {
         status: formData.status,
         phone: formData.phone,
         father_name: formData.father_name.toUpperCase(), // ✅ UPPERCASE
-        gender: formData.gender || null,
-        accommodation_type: formData.accommodation_type?.toUpperCase() || null, // ✅ UPPERCASE
+        gender: formData.gender || undefined,
+        accommodation_type: formData.accommodation_type?.toUpperCase() || undefined, // ✅ UPPERCASE
         initial_fee: formData.initial_fee || 0,
         ...(formData.password && { password: formData.password }),
       });
@@ -263,7 +260,7 @@ export const StudentRegistrationTab: React.FC = () => {
 
       if (result.success) {
         setSuccessMessage(`✅ ${formData.name} updated successfully`);
-        setFormData({ name: '', email: '', class: '1A', status: 'Active', password: '', phone: '', father_name: '', gender: '', accommodation_type: '', initial_fee: 0 });
+        setFormData({ name: '', email: '', class: availableClasses?.[0]?.class_name || '', status: 'Active', password: '', phone: '', father_name: '', gender: '', accommodation_type: '', initial_fee: 0 });
         setEditingStudent(null);
         setShowForm(false);
         loadStudents();
@@ -299,51 +296,7 @@ export const StudentRegistrationTab: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleDeactivateStudent = async (student: Student) => {
-    if (!confirm(`Are you sure you want to deactivate ${student.name}?`)) return;
-
-    setIsLoading(true);
-    setErrorMessage('');
-    setSuccessMessage('');
-    try {
-      console.log(`🔄 Deactivating student: ${student.register_no}`);
-      const result = await deactivateStudent(student.register_no);
-      console.log(`📊 Deactivate result:`, result);
-      if (result.success) {
-        setSuccessMessage(`✅ ${student.name} deactivated successfully`);
-        await loadStudents();
-      } else {
-        setErrorMessage(result.error || 'Failed to deactivate student');
-      }
-    } catch (error: any) {
-      console.error('❌ Error deactivating student:', error);
-      setErrorMessage(error.message || 'Error deactivating student');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleReactivateStudent = async (student: Student) => {
-    setIsLoading(true);
-    setErrorMessage('');
-    setSuccessMessage('');
-    try {
-      console.log(`🔄 Reactivating student: ${student.register_no}`);
-      const result = await reactivateStudent(student.register_no);
-      console.log(`📊 Reactivate result:`, result);
-      if (result.success) {
-        setSuccessMessage(`✅ ${student.name} reactivated successfully`);
-        await loadStudents();
-      } else {
-        setErrorMessage(result.error || 'Failed to reactivate student');
-      }
-    } catch (error: any) {
-      console.error('❌ Error reactivating student:', error);
-      setErrorMessage(error.message || 'Error reactivating student');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Deactivate/reactivate handlers removed (not referenced in UI)
 
   const handleSearchStudentByRegisterNo = async () => {
     if (!searchRegisterNo.trim()) {
@@ -357,12 +310,12 @@ export const StudentRegistrationTab: React.FC = () => {
     const student = students.find(s => s.register_no === searchRegisterNo);
     if (student) {
       setFoundStudent(student);
-      setNewClass(student.class); // Pre-fill with current class
+      setFormData(prev => ({ ...prev, class: student.class })); // Pre-fill with current class
       setNewCurrentFee(student.initial_fee || 0); // Pre-fill with student's initial fee
     } else {
       setErrorMessage(`Student with register number ${searchRegisterNo} not found`);
       setFoundStudent(null);
-      setNewClass('');
+      setFormData(prev => ({ ...prev, class: '' }));
       setNewCurrentFee(0);
     }
   };
@@ -701,7 +654,7 @@ export const StudentRegistrationTab: React.FC = () => {
                       <select
                         value={student.status || 'Active'}
                         onChange={async (e) => {
-                          setUpdatingStatusFor(student.id);
+                          setUpdatingStatusFor(student.id || null);
                           console.log(`\n${'='.repeat(60)}`);
                           console.log(`🔔 STATUS CHANGE EVENT TRIGGERED`);
                           console.log(`   Student: ${student.name}`);
@@ -716,7 +669,7 @@ export const StudentRegistrationTab: React.FC = () => {
                             // First update the status
                             console.log(`\n🔄 STEP 1: Calling updateStudentStatus`);
                             console.log(`   Parameters: id="${student.id}", status="${newStatus}"`);
-                            const result = await updateStudentStatus(student.id, newStatus);
+                            const result = await updateStudentStatus(student.id!, newStatus);
                             console.log(`📊 updateStudentStatus result:`, result);
                             
                             if (!result.success) {

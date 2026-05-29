@@ -11,10 +11,8 @@ import {
   deactivateStudent,
   reactivateStudent,
   transferStudent,
-  dropStudent,
   getStudentCompleteRecord,
-  getClassRoster,
-  searchStudents
+  getClassRoster
 } from './studentService';
 
 import {
@@ -22,15 +20,13 @@ import {
   generateBatchRegisterNumbers,
   parseRegisterNumber,
   getCurrentSequence,
-  getRegisterNumberStats,
-  registerConfig
+  getRegisterNumberStats
 } from './registerNumber';
 
 import {
   filterStudents,
   searchByName,
-  getClassEnrollmentStats,
-  getStudentsByPerformance
+  getClassEnrollmentStats
 } from './studentFilter';
 
 /**
@@ -207,7 +203,7 @@ export async function testFiltering() {
 
     // Test 4: Get class roster
     console.log('\nTest 4: Get complete class roster');
-    const roster = await getClassRoster('10A');
+    const roster = (await getClassRoster('10A')).data || [];
     console.log(`✅ Class 10A has ${roster.length} active students`);
 
     // Test 5: Class enrollment stats
@@ -312,29 +308,29 @@ export async function testFullWorkflow() {
 
     // Step 2: Retrieve
     console.log('Step 2: Retrieving student...');
-    const getResult = await getStudentByRegisterNo(registerNo);
+    const getResult = await getStudentByRegisterNo(registerNo!);
     console.log(`✅ Retrieved: ${getResult.data?.name}\n`);
 
     // Step 3: Update
     console.log('Step 3: Updating student...');
-    await updateStudent(registerNo, { class: '10B' });
+    await updateStudent(registerNo!, { class: '10B' });
     console.log(`✅ Updated: Class changed\n`);
 
     // Step 4: Check status
     console.log('Step 4: Checking status...');
-    let current = await getStudentByRegisterNo(registerNo);
+    let current = await getStudentByRegisterNo(registerNo!);
     console.log(`✅ Current status: ${current.data?.status}\n`);
 
     // Step 5: Deactivate
     console.log('Step 5: Deactivating student...');
-    await deactivateStudent(registerNo, 'Test deactivation');
-    current = await getStudentByRegisterNo(registerNo);
+    await deactivateStudent(registerNo!, 'Test deactivation');
+    current = await getStudentByRegisterNo(registerNo!);
     console.log(`✅ Status: ${current.data?.status}\n`);
 
     // Step 6: Reactivate
     console.log('Step 6: Reactivating student...');
-    await reactivateStudent(registerNo);
-    current = await getStudentByRegisterNo(registerNo);
+    await reactivateStudent(registerNo!);
+    current = await getStudentByRegisterNo(registerNo!);
     console.log(`✅ Status: ${current.data?.status}\n`);
 
     console.log('✅ Full workflow completed successfully!\n');

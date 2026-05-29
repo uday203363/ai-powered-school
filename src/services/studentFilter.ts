@@ -183,7 +183,7 @@ export async function getClassEnrollmentStats(): Promise<
       class_name: c.class_name,
       max_students: c.max_students,
       current_students: c.current_students,
-      percentage: ((c.current_students / c.max_students) * 100).toFixed(2),
+      percentage: Number(((c.current_students / c.max_students) * 100).toFixed(2)),
     }));
   } catch (error) {
     console.error('Error getting enrollment stats:', error);
@@ -262,7 +262,7 @@ async function getStudentsByClassNameWithAttendance(
           present,
           absent,
           leave,
-          percentage: ((present / total) * 100).toFixed(2),
+          percentage: Number(((present / total) * 100).toFixed(2)),
         };
       })
     );
@@ -379,8 +379,8 @@ export async function exportStudentData(
           class: student.class,
           admission_year: student.admission_year,
           status: student.status,
-          marks_count: marks?.[0]?.count || 0,
-          attendance_count: attendance?.[0]?.count || 0,
+          marks_count: (marks as any[])?.[0]?.count || 0,
+          attendance_count: (attendance as any[])?.[0]?.count || 0,
           total_fees: feeStats.total,
           fees_paid: feeStats.paid,
           fees_balance: feeStats.balance,

@@ -50,11 +50,14 @@ export const Button: React.FC<{
 export const Input: React.FC<{
   type?: string;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   label?: string;
   error?: string;
+  required?: boolean;
+  disabled?: boolean;
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }> = ({
   type = 'text',
   placeholder,
@@ -63,6 +66,9 @@ export const Input: React.FC<{
   className = '',
   label,
   error,
+  required,
+  disabled,
+  onKeyPress,
 }) => {
   return (
     <div className={className}>
@@ -72,6 +78,9 @@ export const Input: React.FC<{
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onKeyPress={onKeyPress}
+        required={required}
+        disabled={disabled}
         className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors ${
           error ? 'border-danger' : 'border-gray-300'
         }`}
@@ -86,12 +95,15 @@ export const Modal: React.FC<{
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg';
 }> = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
+  const sizeClass = 'max-w-2xl';
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+      <div className={`bg-white rounded-lg shadow-xl ${sizeClass} w-full mx-4 max-h-96 overflow-y-auto`}>
         <div className="flex justify-between items-center p-6 border-b">
           <h2 className="text-xl font-bold">{title}</h2>
           <button

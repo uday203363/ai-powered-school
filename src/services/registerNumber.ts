@@ -112,35 +112,7 @@ export function isValidRegisterNumber(registerNo: string): boolean {
   return isValid;
 }
 
-/**
- * Gets or creates sequence tracker for admission year + school code
- */
-async function getOrCreateSequence(
-  admissionYear: number,
-  schoolCode: string
-): Promise<{ id: string; currentSequence: number }> {
-  try {
-    console.log(`🔎 getOrCreateSequence: Looking for year=${admissionYear}, school=${schoolCode}`);
-    const result = await apiRequest<{ register_no: string; current_sequence: number }>(
-      `/register-numbers/next`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ admissionYear, schoolCode }),
-      }
-    );
-
-    if (!result.success || !result.data) {
-      throw new Error(result.error || 'Failed to create sequence');
-    }
-
-    const currentSequence = Math.max(0, (result.data.current_sequence || 0) - 1);
-    return { id: result.data.register_no, currentSequence };
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : (typeof error === 'object' ? JSON.stringify(error) : String(error));
-    console.error('❌ Error in getOrCreateSequence:', errorMsg);
-    throw new Error(errorMsg);
-  }
-}
+// getOrCreateSequence removed — generation now uses API endpoints directly
 
 /**
  * Generates next unique register number
@@ -302,25 +274,7 @@ export async function getRegisterNumberStats(
   }
 }
 
-/**
- * Gets or creates teacher sequence tracker
- * Format: TEA{SCHOOL_CODE}{SEQUENCE}
- */
-async function getOrCreateTeacherSequence(
-  schoolCode: string
-): Promise<{ id: string; currentSequence: number }> {
-  try {
-    const result = await apiRequest<{ register_no: string }>(`/register-numbers/teacher/next?schoolCode=${encodeURIComponent(schoolCode)}`);
-    if (!result.success || !result.data?.register_no) {
-      throw new Error(result.error || 'Failed to create teacher sequence');
-    }
-    return { id: result.data.register_no, currentSequence: 0 };
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : (typeof error === 'object' ? JSON.stringify(error) : String(error));
-    console.error('❌ Error in getOrCreateTeacherSequence:', errorMsg);
-    throw new Error(errorMsg);
-  }
-}
+// getOrCreateTeacherSequence removed — use API endpoints directly
 
 /**
  * Generates next unique teacher register number

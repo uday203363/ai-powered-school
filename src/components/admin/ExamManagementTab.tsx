@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, AlertCircle, CheckCircle, Check } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, CheckCircle, Check } from 'lucide-react';
 import { examService, classConfigService, marksService, studentService } from '../../services/database';
 
 interface Exam {
@@ -32,7 +32,7 @@ export default function ExamManagementTab() {
     assessment_type: 'formative',
     year: new Date().getFullYear(),
   });
-  const [editingExam, setEditingExam] = useState<Exam | null>(null);
+  // editingExam state removed (not used)
 
   useEffect(() => {
     loadExamsAndClasses();

@@ -127,7 +127,7 @@ export const AddAdminTab: React.FC = () => {
           setError(`Failed to update admin: ${result.message || 'Unknown error'}`);
         } else {
           setSuccess(`✅ Admin "${formData.name}" updated successfully!`);
-          setFormData({ name: '', email: '', phone: '', password: '', gender: '' });
+            setFormData({ registerNo: '', name: '', email: '', phone: '', password: '', gender: '' });
           setEditingId(null);
           fetchAdmins();
           setTimeout(() => setSuccess(''), 3000);
@@ -146,7 +146,7 @@ export const AddAdminTab: React.FC = () => {
           setError(`Failed to create admin: ${result.message || 'Unknown error'}`);
         } else {
           setSuccess(`✅ Admin "${formData.name}" created successfully!`);
-          setFormData({ registerNo: '', name: '', email: '', phone: '', password: '', gender: '' });
+            setFormData({ registerNo: '', name: '', email: '', phone: '', password: '', gender: '' });
           fetchAdmins();
           setTimeout(() => setSuccess(''), 3000);
         }
@@ -160,7 +160,7 @@ export const AddAdminTab: React.FC = () => {
 
   const handleCancel = () => {
     setEditingId(null);
-    setFormData({ registerNo: '', name: '', email: '', phone: '', password: '', gender: '' });
+      setFormData({ registerNo: '', name: '', email: '', phone: '', password: '', gender: '' });
     setError('');
   };
 
@@ -335,7 +335,7 @@ export const AddAdminTab: React.FC = () => {
               <Button
                 type="button"
                 onClick={() => {
-                  setFormData({ name: '', email: '', phone: '', password: '', gender: '' });
+                     setFormData({ registerNo: '', name: '', email: '', phone: '', password: '', gender: '' });
                   setError('');
                 }}
                 className="bg-gray-400 hover:bg-gray-500"

@@ -1,5 +1,4 @@
 // Test file to verify component works
-import React from 'react';
 import { AssignClassTeachersTab } from './AssignClassTeachersTab';
 
 export const TestClassTeachersTab = () => {

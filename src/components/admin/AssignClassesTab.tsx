@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, Button, Input } from '../common';
-import { AlertCircle, CheckCircle, Save, Plus, Trash2 } from 'lucide-react';
+import { AlertCircle, CheckCircle, Save } from 'lucide-react';
 import { authService, classConfigService } from '../../services';
 import { normalizeObject } from '../../utils/normalize';
 
@@ -14,12 +14,7 @@ interface Teacher {
   class_teacher_for: string;
 }
 
-interface ClassAssignment {
-  teacherId: string;
-  teacherName: string;
-  assignedClasses: string;
-  classTeacherFor: string;
-}
+
 
 export const AssignClassesTab: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);

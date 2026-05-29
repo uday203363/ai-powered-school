@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Input } from '../../components/common';
+import { Card, Button } from '../../components/common';
 import { teacherService, classConfigService } from '../../services';
 import { normalizeString } from '../../utils/normalize';
-import { Users, BookOpen, Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw } from 'lucide-react';
 
 export const AssignClassTeachersTab: React.FC = () => {
   const [classes, setClasses] = useState<any[]>([]);
   const [teachers, setTeachers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [assignments, setAssignments] = useState<{ [key: string]: string }>({});
+  // assignment temporary state removed (unused)
   const [currentAssignments, setCurrentAssignments] = useState<{ [key: string]: any }>({});
   const [saveStatus, setSaveStatus] = useState<{ [key: string]: string }>({});
 
