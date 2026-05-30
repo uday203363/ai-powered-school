@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { authService } from '../../services';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,6 +15,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-2xl font-bold">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated && authService.isAuthenticated()) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-2xl font-bold">Loading...</div>

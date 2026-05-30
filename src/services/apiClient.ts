@@ -22,14 +22,9 @@ export const getApiUrl = (path: string): string => {
 
 export const getAuthHeaders = (includeJson: boolean = true): HeadersInit => {
   const headers: Record<string, string> = {};
-  const token = localStorage.getItem('auth_token');
 
   if (includeJson) {
     headers['Content-Type'] = 'application/json';
-  }
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
   }
 
   return headers;
@@ -41,6 +36,7 @@ export const apiRequest = async <T>(
 ): Promise<{ success: boolean; data?: T; error?: string; message?: string }> => {
   const response = await fetch(getApiUrl(path), {
     ...options,
+    credentials: 'include',
     headers: {
       ...getAuthHeaders(true),
       ...(options.headers || {}),

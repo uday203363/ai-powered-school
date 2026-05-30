@@ -53,12 +53,15 @@ router.post('/login', async (req: Request, res: Response) => {
       return;
     }
 
-    // Generate token
-    const token = generateToken(user.id, user.register_no, user.role);
+    // Create server session (session cookie will be session-only)
+    (req as any).session.user = {
+      id: user.id,
+      register_no: user.register_no,
+      role: user.role,
+    };
 
     res.json({
       success: true,
-      token,
       user: {
         id: user.id,
         register_no: user.register_no,
@@ -76,6 +79,28 @@ router.post('/login', async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// POST /api/auth/logout - destroy session
+router.post('/logout', async (req: Request, res: Response) => {
+  try {
+    const sess = (req as any).session;
+    if (sess) {
+      sess.destroy((err: any) => {
+        if (err) {
+          console.error('Session destroy error:', err);
+          res.status(500).json({ error: 'Failed to logout' });
+          return;
+        }
+        res.json({ success: true });
+      });
+    } else {
+      res.json({ success: true });
+    }
+  } catch (error: any) {
+    console.error('Logout error:', error);
+    res.status(500).json({ error: 'Logout failed' });
   }
 });
 

@@ -14,15 +14,24 @@ export const authenticateToken = (
   res: Response,
   next: NextFunction
 ): void => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    res.status(401).json({ error: 'No token provided' });
-    return;
-  }
-
+  // Prefer server session if present (session cookie)
   try {
+    const sess = (req as any).session;
+    if (sess && sess.user) {
+      req.user = sess.user as DecodedToken;
+      next();
+      return;
+    }
+
+    // Fallback to Authorization header (JWT)
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) {
+      res.status(401).json({ error: 'No token provided' });
+      return;
+    }
+
     const decoded = verifyToken(token);
     req.user = decoded;
     next();

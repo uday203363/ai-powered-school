@@ -21,10 +21,9 @@ export const AdminGalleryPage: React.FC = () => {
       });
       formData.append('eventName', eventName);
 
-      const token = localStorage.getItem('auth_token');
       const response = await fetch(getApiUrl('/photos'), {
         method: 'POST',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        credentials: 'include',
         body: formData,
       });
 

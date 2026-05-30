@@ -2,6 +2,9 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import session from 'express-session';
+import connectPgSimple from 'connect-pg-simple';
+import { pool } from './config/database.js';
 import { authenticateToken } from './middleware/auth.js';
 import authRoutes from './routes/auth.js';
 import studentRoutes from './routes/students.js';
@@ -24,6 +27,22 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session store (Postgres)
+const PgSession = connectPgSimple(session as any);
+
+app.use(session({
+  store: new PgSession({ pool }),
+  secret: process.env.SESSION_SECRET || 'change_this_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    // no maxAge -> session cookie cleared on browser close
+  }
+}));
 
 // Health check endpoint
 app.get('/api/health', (req: Request, res: Response) => {

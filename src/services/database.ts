@@ -1728,10 +1728,9 @@ export const notificationService = {
         formData.append('type', String(notification.type || 'info'));
         attachments.forEach((file) => formData.append('pdfs', file));
 
-        const token = localStorage.getItem('auth_token');
         const response = await fetch(getApiUrl('/notifications/pdfs'), {
           method: 'POST',
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          credentials: 'include',
           body: formData,
         });
 

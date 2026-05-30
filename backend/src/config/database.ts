@@ -5,9 +5,15 @@ dotenv.config();
 
 const { Pool } = pg;
 
+const connectionString = process.env.DATABASE_URL;
+const useSsl =
+  process.env.PGSSLMODE === 'require' ||
+  (connectionString ? /supabase\.com/i.test(connectionString) : false) ||
+  process.env.NODE_ENV === 'production';
+
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  connectionString,
+  ssl: useSsl ? { rejectUnauthorized: false } : false,
 });
 
 pool.on('error', (err: Error) => {

@@ -142,7 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white transform transition-transform duration-300 z-40 md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 w-64 bg-gray-900 text-white transform transition-transform duration-300 z-40 flex flex-col overflow-y-auto overscroll-contain md:static md:translate-x-0 md:h-screen ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -158,7 +158,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        <nav className="mt-8 space-y-2 px-4">
+        <nav className="mt-8 flex-1 space-y-2 px-4 pb-6">
           {filteredMenuItems.map((item) => {
             const isActive = location.pathname.startsWith(item.to);
             return (
@@ -180,7 +180,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </nav>
 
         {/* Settings & Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
+        <div className="mt-auto border-t border-gray-700 p-4">
           <button
             onClick={logout}
             className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors"

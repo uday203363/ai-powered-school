@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Input, Button } from '../components/common';
@@ -8,8 +8,21 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user, loading: authLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  const getDashboardPath = (role?: string | null) => {
+    const normalizedRole = role?.trim().toLowerCase();
+    if (normalizedRole === 'admin') return '/dashboard';
+    if (normalizedRole === 'teacher') return '/teacher/dashboard';
+    if (normalizedRole === 'student') return '/student/dashboard';
+    return '/dashboard';
+  };
+
+  useEffect(() => {
+    if (authLoading || !isAuthenticated || !user) return;
+    navigate(getDashboardPath(user.role), { replace: true });
+  }, [authLoading, isAuthenticated, navigate, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,19 +36,9 @@ export const LoginPage: React.FC = () => {
         setError(result.message || 'Login failed');
       } else {
         if (result.firstLogin) {
-          navigate('/change-password');
+          navigate('/change-password', { replace: true });
         } else {
-          // Redirect to role-specific dashboard
-          const role = result.user?.role;
-          if (role === 'admin') {
-            navigate('/dashboard');
-          } else if (role === 'teacher') {
-            navigate('/teacher/dashboard');
-          } else if (role === 'student') {
-            navigate('/student/dashboard');
-          } else {
-            navigate('/dashboard');
-          }
+          navigate(getDashboardPath(result.user?.role), { replace: true });
         }
       }
     } catch (err) {

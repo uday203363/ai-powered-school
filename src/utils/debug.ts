@@ -1,7 +1,6 @@
 // Quick utility to clear session during testing
 export const clearSession = () => {
   localStorage.removeItem('auth_user');
-  localStorage.removeItem('auth_token');
   sessionStorage.clear();
   window.location.href = '/login';
 };

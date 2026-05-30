@@ -22,14 +22,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   const refreshUserProfile = useCallback(async (): Promise<User | null> => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) return null;
-
     try {
       const response = await fetch(getApiUrl('/auth/me'), {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -76,20 +71,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const initializeUser = async () => {
-      // Load user from localStorage if exists
-      const currentUser = authService.getCurrentUser();
-      if (currentUser) {
-        console.log('✅ User session restored from localStorage:', currentUser.name);
-        setUser(currentUser);
-
-        // Refresh from backend to avoid stale class/class_teacher fields
-        await refreshUserProfile();
+      // Try to fetch current session from server (session cookie)
+      const me = await refreshUserProfile();
+      if (me) {
+        setUser(me);
       }
       setLoading(false);
     };
 
     initializeUser();
   }, [refreshUserProfile]);
+
+  // Ensure session is destroyed on browser/tab close where possible
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      try {
+        // Best-effort: tell server to destroy session
+        navigator.sendBeacon(getApiUrl('/auth/logout'));
+      } catch (e) {
+        // ignore
+      }
+      // Clear any cached user info
+      localStorage.removeItem('auth_user');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   // Refresh user profile when teachers are updated (same-window assignments)
   useEffect(() => {

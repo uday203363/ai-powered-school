@@ -17,6 +17,7 @@ export const authService = {
       const response = await fetch(getApiUrl('/auth/login'), {
         method: 'POST',
         headers: getAuthHeaders(true),
+        credentials: 'include',
         body: JSON.stringify({ register_no: registerNo, password }),
       });
 
@@ -27,8 +28,6 @@ export const authService = {
       }
 
       const user = normalizeAuthUser(payload.user);
-      localStorage.setItem('auth_user', JSON.stringify(user));
-      localStorage.setItem('auth_token', payload.token);
 
       return {
         success: true,
@@ -47,6 +46,7 @@ export const authService = {
       const response = await fetch(getApiUrl(`/auth/change-password`), {
         method: 'POST',
         headers: getAuthHeaders(true),
+        credentials: 'include',
         body: JSON.stringify({ newPassword }),
       });
 
@@ -77,6 +77,7 @@ export const authService = {
       const response = await fetch(getApiUrl(`/auth/change-password`), {
         method: 'POST',
         headers: getAuthHeaders(true),
+        credentials: 'include',
         body: JSON.stringify({ currentPassword, newPassword }),
       });
 
@@ -94,19 +95,23 @@ export const authService = {
 
   // Get current logged in user
   getCurrentUser(): User | null {
-    const userStr = localStorage.getItem('auth_user');
-    return userStr ? normalizeAuthUser(JSON.parse(userStr)) : null;
+    return null;
   },
 
   // Logout
   logout() {
+    // Call server logout and clear local storage
+    try {
+      fetch(getApiUrl('/auth/logout'), { method: 'POST', credentials: 'include' });
+    } catch (e) {
+      // ignore
+    }
     localStorage.removeItem('auth_user');
-    localStorage.removeItem('auth_token');
   },
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('auth_token');
+    return !!localStorage.getItem('auth_user');
   },
 
   // Create new user (Admin only)
@@ -121,6 +126,7 @@ export const authService = {
       const response = await fetch(getApiUrl('/users'), {
         method: 'POST',
         headers: getAuthHeaders(true),
+        credentials: 'include',
         body: JSON.stringify({
           register_no: registerNo,
           name,
@@ -148,6 +154,7 @@ export const authService = {
     try {
       const response = await fetch(getApiUrl('/users'), {
         headers: getAuthHeaders(false),
+        credentials: 'include',
       });
       const payload = await response.json().catch(() => ({}));
 
@@ -183,6 +190,7 @@ export const authService = {
       const response = await fetch(getApiUrl(`/users/${userId}`), {
         method: 'PUT',
         headers: getAuthHeaders(true),
+        credentials: 'include',
         body: JSON.stringify(updates),
       });
 
@@ -204,6 +212,7 @@ export const authService = {
       const response = await fetch(getApiUrl(`/users/${userId}`), {
         method: 'DELETE',
         headers: getAuthHeaders(false),
+        credentials: 'include',
       });
 
       if (!response.ok) {
