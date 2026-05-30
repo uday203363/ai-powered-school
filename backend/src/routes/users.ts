@@ -208,9 +208,10 @@ router.put('/:id', authenticateToken, requireAdmin, async (req: Request, res: Re
 
     // If currentPassword provided, verify it before allowing password change
     if (currentPassword) {
-      const existing = await query(`SELECT password FROM users WHERE id = $1`, [id]);
+      const existing = await query(`SELECT COALESCE(NULLIF(password, ''), NULLIF(encrypted_password, '')) AS password FROM users WHERE id = $1`, [id]);
       const stored = existing.rows?.[0]?.password || '';
-      if (simpleHash(currentPassword) !== stored) {
+      const hashedCurrent = simpleHash(currentPassword);
+      if (stored !== hashedCurrent && stored !== currentPassword) {
         res.status(401).json({ error: 'Current password incorrect' });
         return;
       }

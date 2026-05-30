@@ -24,8 +24,8 @@ http://localhost:5173
 - Dashboard: Admin Overview with stats, activities, alerts
 
 ### Login as Teacher
-- Register No: `teacher1`
-- Password: `teacher1`
+- Register No: `TEASBPS0001`
+- Password: `welcome`
 - Dashboard: Teacher Dashboard with marks/attendance options
 
 ### Login as Student

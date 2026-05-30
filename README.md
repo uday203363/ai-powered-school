@@ -210,15 +210,15 @@ In Supabase SQL Editor, run the SQL scripts from above to create all tables.
 ```sql
 -- Create demo admin user
 INSERT INTO users (register_no, password, role, name, first_login)
-VALUES ('admin', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'admin', 'Administrator', false);
+VALUES ('admin', 'admin', 'admin', 'Administrator', false);
 
 -- Create demo teacher
 INSERT INTO users (register_no, password, role, name, class, first_login)
-VALUES ('teacher1', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'teacher', 'John Teacher', 'Class A', false);
+VALUES ('TEASBPS0001', 'welcome', 'teacher', 'John Teacher', 'Class A', false);
 
 -- Create demo student
 INSERT INTO users (register_no, password, role, name, class, first_login)
-VALUES ('student1', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'student', 'Jane Student', 'Class A', false);
+VALUES ('student1', 'student1', 'student', 'Jane Student', 'Class A', false);
 ```
 
 ### 5. Run Development Server
@@ -231,7 +231,7 @@ Application will open at `http://localhost:5173`
 
 **Demo Credentials:**
 - Admin: `admin` / `admin`
-- Teacher: `teacher1` / `teacher1`
+- Teacher: `TEASBPS0001` / `welcome`
 - Student: `student1` / `student1`
 
 ## Development

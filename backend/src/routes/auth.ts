@@ -27,9 +27,11 @@ router.post('/login', async (req: Request, res: Response) => {
       return;
     }
 
-    // Find user by register_no
+    // Find user by register_no. Some schemas use `encrypted_password`.
     const result = await query(
-      `SELECT id, register_no, name, role, password, class, assigned_classes,
+      `SELECT id, register_no, name, role, 
+              COALESCE(NULLIF(password, ''), NULLIF(encrypted_password, '')) AS password,
+              class, assigned_classes,
               email, phone, subjects,
               NULLIF(TRIM(class_teacher_of), '') AS class_teacher_for
        FROM users
@@ -147,7 +149,7 @@ router.post('/change-password', authenticateToken, async (req: Request, res: Res
     }
 
     const result = await query(
-      `SELECT id, password, first_login FROM users WHERE id = $1`,
+      `SELECT id, COALESCE(NULLIF(password, ''), NULLIF(encrypted_password, '')) AS password, first_login FROM users WHERE id = $1`,
       [req.user.id]
     );
 

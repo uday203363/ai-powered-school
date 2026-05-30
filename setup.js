@@ -46,7 +46,7 @@ async function setupDemo() {
     const { error: deleteError } = await supabase
       .from('users')
       .delete()
-      .in('register_no', ['admin', 'teacher1', 'student1']);
+      .in('register_no', ['admin', 'teacher1', 'TEASBPS0001', 'student1']);
 
     if (deleteError) {
       console.warn('⚠️  Warning (safe to ignore):', deleteError.message);
@@ -55,9 +55,9 @@ async function setupDemo() {
     // Insert demo users
     console.log('➕ Inserting demo users...');
     const demoUsers = [
-      { register_no: 'admin', password: '1j67nz', role: 'admin', name: 'Admin User', class: null, first_login: false },
-      { register_no: 'teacher1', password: '-rqklf5', role: 'teacher', name: 'John Teacher', class: null, first_login: false },
-      { register_no: 'student1', password: 'v0xl5i', role: 'student', name: 'Alex Student', class: 'Class 10A', first_login: false },
+      { register_no: 'admin', password: 'admin', role: 'admin', name: 'Admin User', class: null, first_login: false },
+      { register_no: 'TEASBPS0001', password: 'welcome', role: 'teacher', name: 'John Teacher', class: null, first_login: false },
+      { register_no: 'student1', password: 'student1', role: 'student', name: 'Alex Student', class: 'Class 10A', first_login: false },
     ];
 
     const { error: insertError } = await supabase
@@ -90,7 +90,7 @@ async function setupDemo() {
     console.log('\n🎉 Setup complete!');
     console.log('\nYou can now login with:');
     console.log('   Admin:    admin / admin');
-    console.log('   Teacher:  teacher1 / teacher1');
+    console.log('   Teacher:  TEASBPS0001 / welcome');
     console.log('   Student:  student1 / student1');
   } catch (error) {
     console.error('❌ Error:', error.message);

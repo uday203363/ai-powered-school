@@ -19,7 +19,7 @@
 
 ### 3. Database
 - ✅ Supabase tables created (users, students, teachers, marks, attendance, fees, notifications)
-- ✅ Demo data available (admin, teacher1, student1 users with demo credentials)
+- ✅ Demo data available (admin, TEASBPS0001, student1 users with demo credentials)
 - ✅ Connection string working
 
 ### 4. Authentication
@@ -79,8 +79,8 @@
 - Dashboard: /dashboard
 
 ### Teacher Account
-- Register No: `teacher1`
-- Default Password: `teacher1`
+- Register No: `TEASBPS0001`
+- Default Password: `welcome`
 - Dashboard: /teacher/dashboard
 
 ### Student Account
@@ -123,7 +123,7 @@ npm run dev
 
 ### Step 4: Test Teacher Role
 1. Logout from admin
-2. Login with teacher1/teacher1
+2. Login with TEASBPS0001/welcome
 3. Change password when prompted
 4. Verify teacher dashboard loads
 5. Navigate to marks and attendance pages
