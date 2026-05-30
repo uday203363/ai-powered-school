@@ -236,7 +236,7 @@ UPDATE users SET status = 'Active' WHERE status IS NULL;
 **D) Filters in UI are wrong**
 If "10-A" shows "0 students" but they exist:
 - Check browser console for filter logs
-- Run in console: `localStorage.clear()` to reset
+- Run in console: `sessionStorage.clear()` to reset
 - Reload page
 
 ---

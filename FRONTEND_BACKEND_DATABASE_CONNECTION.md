@@ -126,8 +126,8 @@ async login(registerNo: string, password: string) {
   });
   
   const { token, user } = await response.json();
-  localStorage.setItem('auth_token', token);
-  localStorage.setItem('auth_user', JSON.stringify(user));
+  sessionStorage.setItem('auth_token', token);
+  sessionStorage.setItem('auth_user', JSON.stringify(user));
 }
 ```
 
@@ -135,7 +135,7 @@ async login(registerNo: string, password: string) {
 - POSTs login credentials to `/api/auth/login`
 - Backend validates against database
 - Receives JWT token
-- Stores token in localStorage for future requests
+- Stores token in sessionStorage for future requests
 
 #### 3. **Protected Requests**
 ```typescript

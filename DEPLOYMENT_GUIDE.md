@@ -306,8 +306,8 @@ Gray Scale: #000000-#f9fafb (0-50)  - Text & backgrounds
 ### Issue: Gemini API Quota Exceeded
 **Solution:** Free tier has limits (typically 60 requests/hour). Wait for reset or upgrade to paid tier
 
-### Issue: localStorage Session Not Persisting
-**Solution:** Check browser's localStorage is enabled. Verify auth_user key is being set
+### Issue: sessionStorage Session Not Persisting
+**Solution:** Check browser's sessionStorage is enabled. Verify auth_user key is being set
 
 ### Issue: Supabase Connection Error
 **Solution:** Verify URL and Anon Key in .env.local. Check Supabase project is active

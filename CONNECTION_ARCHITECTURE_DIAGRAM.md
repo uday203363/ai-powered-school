@@ -180,7 +180,7 @@ USER BROWSER                         BACKEND                         DATABASE
      │    "user": { id, name, role }    │                                 │
      │  }                               │                                 │
      │                                  │                                 │
-     │ 8. Store token in localStorage   │                                 │
+    │ 8. Store token in sessionStorage │                                 │
      │    auth_token = "eyJhbG..."      │                                 │
      │    auth_user = {...}             │                                 │
      │                                  │                                 │

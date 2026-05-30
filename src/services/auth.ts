@@ -1,6 +1,33 @@
 import { getApiUrl, getAuthHeaders } from './apiClient';
 import type { User } from '../types';
 
+const AUTH_TOKEN_KEY = 'auth_token';
+const AUTH_USER_KEY = 'auth_user';
+
+const readSessionItem = (key: string): string | null => {
+  try {
+    return sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const writeSessionItem = (key: string, value: string) => {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch {
+    // ignore storage errors
+  }
+};
+
+const removeSessionItem = (key: string) => {
+  try {
+    sessionStorage.removeItem(key);
+  } catch {
+    // ignore storage errors
+  }
+};
+
 const normalizeAuthUser = (user: any): User | null => {
   if (!user) return null;
 
@@ -28,6 +55,12 @@ export const authService = {
       }
 
       const user = normalizeAuthUser(payload.user);
+
+      // Persist user and token in sessionStorage (session-only)
+      if (payload.token) {
+        writeSessionItem(AUTH_TOKEN_KEY, payload.token);
+      }
+      writeSessionItem(AUTH_USER_KEY, JSON.stringify(user));
 
       return {
         success: true,
@@ -95,7 +128,14 @@ export const authService = {
 
   // Get current logged in user
   getCurrentUser(): User | null {
-    return null;
+    try {
+      const raw = readSessionItem(AUTH_USER_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return normalizeAuthUser(parsed);
+    } catch (e) {
+      return null;
+    }
   },
 
   // Logout
@@ -106,12 +146,13 @@ export const authService = {
     } catch (e) {
       // ignore
     }
-    localStorage.removeItem('auth_user');
+    removeSessionItem(AUTH_USER_KEY);
+    removeSessionItem(AUTH_TOKEN_KEY);
   },
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('auth_user');
+    return !!readSessionItem(AUTH_TOKEN_KEY);
   },
 
   // Create new user (Admin only)

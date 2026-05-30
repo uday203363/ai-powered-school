@@ -409,7 +409,7 @@ If none of the above work, try these quick fixes in order:
 3. **Clear localStorage:**
    ```javascript
    // In browser console (F12):
-   localStorage.clear()
+   sessionStorage.clear()
    ```
 
 4. **Reset database connection:**

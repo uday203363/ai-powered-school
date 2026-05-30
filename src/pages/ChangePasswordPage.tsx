@@ -43,9 +43,7 @@ export const ChangePasswordPage: React.FC = () => {
         setSuccess('Password changed successfully! Redirecting...');
         setTimeout(() => {
           // Redirect based on role
-          const role = localStorage.getItem('auth_user') 
-            ? JSON.parse(localStorage.getItem('auth_user') || '{}').role 
-            : 'student';
+          const role = user?.role || 'student';
           
           if (role === 'admin') {
             navigate('/dashboard');

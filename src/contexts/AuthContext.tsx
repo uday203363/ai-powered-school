@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { User } from '../types';
 import { authService } from '../services';
-import { getApiUrl } from '../services/apiClient';
+import { getApiUrl, getAuthHeaders } from '../services/apiClient';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch(getApiUrl('/auth/me'), {
         credentials: 'include',
+        headers: getAuthHeaders(false),
       });
 
       if (response.ok) {
@@ -56,7 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
               return prev;
             }
 
-            localStorage.setItem('auth_user', JSON.stringify(merged));
+            try {
+              sessionStorage.setItem('auth_user', JSON.stringify(merged));
+            } catch (e) {
+              // ignore storage errors
+            }
             return merged;
           });
           return mergedUser;
@@ -71,7 +76,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const initializeUser = async () => {
-      // Try to fetch current session from server (session cookie)
+      if (!authService.isAuthenticated()) {
+        try {
+          sessionStorage.removeItem('auth_user');
+        } catch {
+          // ignore
+        }
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Prefer sessionStorage cached user first
+      try {
+        const raw = sessionStorage.getItem('auth_user');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setUser(parsed as User);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      // Fallback: Try to fetch current session from server (session cookie)
       const me = await refreshUserProfile();
       if (me) {
         setUser(me);
@@ -92,7 +121,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         // ignore
       }
       // Clear any cached user info
-      localStorage.removeItem('auth_user');
+      try {
+        sessionStorage.removeItem('auth_user');
+        sessionStorage.removeItem('auth_token');
+      } catch (e) {
+        // ignore
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -149,7 +183,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (result.success) {
       const updatedUser = { ...user, first_login: false };
       setUser(updatedUser);
-      localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+      try {
+        sessionStorage.setItem('auth_user', JSON.stringify(updatedUser));
+      } catch (e) {
+        // ignore
+      }
     }
     return result;
   };
@@ -163,7 +201,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         logout,
         changePassword,
         refreshUserProfile,
-        isAuthenticated: !!user,
+        isAuthenticated: authService.isAuthenticated(),
       }}
     >
       {children}

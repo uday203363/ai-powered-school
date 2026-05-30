@@ -1,4 +1,13 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const AUTH_TOKEN_KEY = 'auth_token';
+
+export const getAuthToken = (): string | null => {
+  try {
+    return sessionStorage.getItem(AUTH_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+};
 
 export const getServerOrigin = (): string => {
   try {
@@ -25,6 +34,14 @@ export const getAuthHeaders = (includeJson: boolean = true): HeadersInit => {
 
   if (includeJson) {
     headers['Content-Type'] = 'application/json';
+  }
+  try {
+    const token = getAuthToken();
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  } catch (e) {
+    // ignore
   }
 
   return headers;
