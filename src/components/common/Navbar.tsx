@@ -4,6 +4,11 @@ import { notificationService } from '../../services';
 import { Bell, FileText, LogOut, Menu, X } from 'lucide-react';
 import { getStaticUrl } from '../../services/apiClient';
 
+interface NavbarProps {
+  isSidebarOpen?: boolean;
+  onMenuToggle?: () => void;
+}
+
 const notificationTimeFormatter = new Intl.DateTimeFormat(undefined, {
   dateStyle: 'medium',
   timeStyle: 'short',
@@ -18,9 +23,8 @@ function formatNotificationTime(value: unknown): string {
   return notificationTimeFormatter.format(date);
 }
 
-export const Navbar: React.FC = () => {
+export const Navbar: React.FC<NavbarProps> = ({ isSidebarOpen = false, onMenuToggle }) => {
   const { user, logout } = useAuth();
-  const [showMenu, setShowMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -137,31 +141,13 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setShowMenu(!showMenu)}
+            onClick={onMenuToggle}
             className="md:hidden text-white"
+            aria-label="Toggle sidebar menu"
           >
-            {showMenu ? <X size={24} /> : <Menu size={24} />}
+            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        {showMenu && (
-          <div className="md:hidden pb-4">
-            <div className="text-sm space-y-2">
-              <p>{user?.name}</p>
-              <button
-                onClick={() => {
-                  logout();
-                  setShowMenu(false);
-                }}
-                className="w-full text-left hover:bg-white hover:bg-opacity-20 px-3 py-2 rounded flex items-center space-x-2"
-              >
-                <LogOut size={18} />
-                <span>Logout</span>
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </nav>
   );

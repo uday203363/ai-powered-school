@@ -18,7 +18,10 @@ export const DashboardLayout: React.FC<Props> = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Navbar */}
-        <Navbar />
+        <Navbar
+          isSidebarOpen={sidebarOpen}
+          onMenuToggle={() => setSidebarOpen((prev) => !prev)}
+        />
 
         {/* Page Content */}
         <main className="flex-1 overflow-auto">
