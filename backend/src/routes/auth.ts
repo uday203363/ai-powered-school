@@ -56,6 +56,8 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 
     // Create server session (session cookie will be session-only)
+    const token = generateToken(user.id, user.register_no, user.role);
+
     (req as any).session.user = {
       id: user.id,
       register_no: user.register_no,
@@ -64,6 +66,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     res.json({
       success: true,
+      token,
       user: {
         id: user.id,
         register_no: user.register_no,
@@ -76,6 +79,7 @@ router.post('/login', async (req: Request, res: Response) => {
         subjects: user.subjects,
         status: user.status,
         class_teacher_for: user.class_teacher_for,
+        first_login: user.first_login,
       },
     });
   } catch (error: any) {
